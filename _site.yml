@@ -6,7 +6,9 @@ navbar:
       href: index.html
     - text: "Journal"
       href: Journal.html
-    - text: "Kallisto_to_DESeq2"
+    - text: "Raw Reads to kallisto"
+      href: raw_seq_reads_to_kallsto.html
+    - text: "Kallisto to DESeq2"
       href: kallisto_h5_to_tximport_to_DESeq2_eval.html
     - text: "About and References"
       href: About-and-References.html
