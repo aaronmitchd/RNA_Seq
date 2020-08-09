@@ -1,4 +1,4 @@
-name: "MyLabJournal"
+name: "Aaron Mitchell-Dick"
 navbar:
   title: "Aaron Mitchell-Dick"
   left:
@@ -6,6 +6,8 @@ navbar:
       href: index.html
     - text: "Journal"
       href: Journal.html
+    - text: "Kallisto_to_DESeq2"
+      href: kallisto_h5_to_tximport_to_DESeq2_eval.html
     - text: "About and References"
       href: About-and-References.html
 output_dir: "docs"
