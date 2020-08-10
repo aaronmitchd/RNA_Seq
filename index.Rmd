@@ -7,8 +7,6 @@ output: html_document
 .title {
   display: none;
 }
-
-#getting-started img {
   margin-right: 10px;
 }
 
@@ -24,9 +22,9 @@ Easy to follow bioinformatics workflows on the command line, bash (Linux), R, Py
 ## RNA-Seq
 
 1. going from raw sequencing reads to kallisto pseudoalignment mapping.
-    [Raw Sequencing Reads -> filtering(FastQC, TrimGalore) -> kallisto](https://aaronmitchd.github.io/RNA_Seq/kallisto_h5_to_tximport_to_DESeq2_eval.html)
+    [Raw Sequencing Reads -> filtering(FastQC, TrimGalore) -> kallisto]()
 2. using kallisto abundance files for differential expression analysis.
-    [kallisto abundance.h5 -> tximport -> DESeq2]()
+    [kallisto abundance.h5 -> tximport -> DESeq2](https://aaronmitchd.github.io/RNA_Seq/kallisto_h5_to_tximport_to_DESeq2_eval.html)
 
 </div>
 <div class="col-sm-6">
