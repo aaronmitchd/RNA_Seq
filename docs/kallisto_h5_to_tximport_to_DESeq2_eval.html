@@ -312,8 +312,9 @@ $(document).ready(function () {
 To see the beginning of the workflow from raw sequencing reads (fastq files) to finished kallisto output directory, see <a href="https://aaronmitchd.github.io/RNA_Seq/raw_seq_reads_to_kallisto.html">Raw Sequencing Reads -&gt; filtering(FastQC, TrimGalore) -&gt; kallisto</a>.<br />
 Here, we start with <code>.h5</code> files already ordered into a directory, and we have already created a <code>.txt</code> files that describes the experimental paradigm, including samples and conditions.<br />
 If you are executing this for the very first time, see this file <a href="https://aaronmitchd.github.io/RNA_Seq/Install-Packages.html">Install Packages</a> for information on how to download all the packages you will need, which you’ll need to do first before you can implement the function <code>library()</code>.</p>
-<div id="load-your-libraries" class="section level3">
-<h3>Load your libraries:</h3>
+<p><br/></p>
+<div id="load-your-libraries" class="section level4">
+<h4>Load your libraries:</h4>
 <pre class="r"><code>library(&quot;tximport&quot;)
 library(&quot;readr&quot;)
 library(&quot;tximportData&quot;)
@@ -321,9 +322,10 @@ library(&quot;rhdf5&quot;)
 library(&quot;GenomicFeatures&quot;)
 library(&quot;DESeq2&quot;)
 library(&quot;pacman&quot;)</code></pre>
+<p><br/></p>
 </div>
-<div id="set-up-your-working-directory" class="section level3">
-<h3>Set up your working directory</h3>
+<div id="set-up-your-working-directory" class="section level4">
+<h4>Set up your working directory</h4>
 <p>Set the file path to the folder that contains: 1) A directory of folders wtih each of your abundance.h5 files from the kallisto operation, and contains 2) The .txt file describing samples and conditions</p>
 <pre class="r"><code>setwd(&quot;C:/Users/AMDprograms/Desktop/Untrimmed/&quot;)</code></pre>
 <p>Turn the folder contents into a dataframe called dir:</p>
@@ -331,9 +333,10 @@ library(&quot;pacman&quot;)</code></pre>
 head(dir)</code></pre>
 <pre><code>## [1] &quot;0h.csv&quot;              &quot;0h_STLC_vs_DMSO.csv&quot; &quot;0h_txi_kallisto.csv&quot;
 ## [4] &quot;5190-S1.fastq.gz&quot;    &quot;5190-S2.fastq.gz&quot;    &quot;5190-S3.fastq.gz&quot;</code></pre>
+<p><br/></p>
 </div>
-<div id="make-a-dataframe-that-describes-your-experimental-conditions" class="section level3">
-<h3>Make a dataframe that describes your experimental conditions</h3>
+<div id="make-a-dataframe-that-describes-your-experimental-conditions" class="section level4">
+<h4>Make a dataframe that describes your experimental conditions</h4>
 <p>Turn the list of sample names into a dataframe:</p>
 <pre class="r"><code>samples &lt;- read.table(file.path(&quot;./samples.txt&quot;), header=TRUE)
 samples</code></pre>
@@ -369,9 +372,10 @@ files</code></pre>
 ## &quot;./kallisto/S3output/abundance.h5&quot; &quot;./kallisto/S4output/abundance.h5&quot; 
 ##                            sample5                            sample6 
 ## &quot;./kallisto/S5output/abundance.h5&quot; &quot;./kallisto/S6output/abundance.h5&quot;</code></pre>
+<p><br/></p>
 </div>
-<div id="making-the-txdb-database-to-relate-transcript-name-to-gene-name" class="section level3">
-<h3>Making the TxDb database to relate transcript name to gene name</h3>
+<div id="making-the-txdb-database-to-relate-transcript-name-to-gene-name" class="section level4">
+<h4>Making the TxDb database to relate transcript name to gene name</h4>
 <p>Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is important, and somewhat tricky. A few different vignettes suggested codes that did not work for me. Luckily, the authors of kallisto maintain <a href="https://github.com/pachterlab/kallisto-transcriptome-indices/releases">a database of tarball downloads</a> that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a <code>.gtf</code> file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism’s gtf file as input into TxDb, making it into a TxDb dataframe. Simply navigate to the directory and file where you extracted the tarball (via Unix/Linux, on Windows Linux using WSL/Ubuntu, or on Mac) and you’re good to go.</p>
 <pre class="r"><code>txdb &lt;- makeTxDbFromGFF(&quot;C:/Users/AMDprograms/Downloads/mus_musculus/mus_musculus/Mus_musculus.GRCm38.96.gtf&quot;)</code></pre>
 <p>You can check what this data is like by calling these:</p>
@@ -396,9 +400,10 @@ files</code></pre>
 ## 4 ENSMUST00000161581 ENSMUSG00000089699
 ## 5 ENSMUST00000192183 ENSMUSG00000103147
 ## 6 ENSMUST00000193244 ENSMUSG00000102348</code></pre>
+<p><br/></p>
 </div>
-<div id="run-tximport" class="section level3">
-<h3>Run tximport</h3>
+<div id="run-tximport" class="section level4">
+<h4>Run tximport</h4>
 <p>Run tximport, and outputs to a dataframe txi.kallisto:</p>
 <pre class="r"><code>#convert dataframe to new name
 tx2gene &lt;- tx_map
@@ -418,9 +423,10 @@ txi.kallisto &lt;- tximport(files, type = &quot;kallisto&quot;, tx2gene=tx2gene,
 ## ENSMUSG00000000037     194   296.000     283     217   383.000  270.000
 ## ENSMUSG00000000049       0     0.000       0       0     0.000    0.000
 ## ENSMUSG00000000056    2401  3793.896    2382    2474  3247.000 2581.000</code></pre>
+<p><br/></p>
 </div>
-<div id="make-a-deseq2-object" class="section level3">
-<h3>Make a DESeq2 object</h3>
+<div id="make-a-deseq2-object" class="section level4">
+<h4>Make a DESeq2 object</h4>
 <p>Turn the tximport dataset into a DeSeq2 object, called a DeSeqDataset:</p>
 <pre class="r"><code>ddsTxi &lt;- DESeqDataSetFromTximport(txi.kallisto,
                                    colData = samples,
@@ -435,9 +441,10 @@ ddsTxi</code></pre>
 ## rowData names(0):
 ## colnames(6): S1output S2output ... S5output S6output
 ## colData names(2): sample condition</code></pre>
+<p><br/></p>
 </div>
-<div id="prefilter-the-reads-to-remove-low-read-counts" class="section level3">
-<h3>Prefilter the reads to remove low read counts</h3>
+<div id="prefilter-the-reads-to-remove-low-read-counts" class="section level4">
+<h4>Prefilter the reads to remove low read counts</h4>
 <p>This prefiltering step is suggested in the DESeq2 vignette. It removes any rows that have less than a total of 10 reads across all samples:</p>
 <pre class="r"><code>keep &lt;- rowSums(counts(ddsTxi)) &gt;= 10
 dds &lt;- ddsTxi[keep,]
@@ -452,14 +459,16 @@ dds</code></pre>
 ## colnames(6): S1output S2output ... S5output S6output
 ## colData names(2): sample condition</code></pre>
 <pre class="r"><code># the above prefiltering function got rid of many transcripts (36047-x=20185)</code></pre>
+<p><br/></p>
 </div>
-<div id="make-sure-deseq2-compares-the-correct-experimental-conditions." class="section level3">
-<h3>Make sure DESeq2 compares the correct experimental conditions.</h3>
+<div id="make-sure-deseq2-compares-the-correct-experimental-conditions." class="section level4">
+<h4>Make sure DESeq2 compares the correct experimental conditions.</h4>
 <p>This next step will just make sure comparisons are made to the correct control. name the ref to whatever your control condition is named (here it’s DMSO):</p>
 <pre class="r"><code>dds$condition &lt;- relevel(dds$condition, ref = &quot;DMSO&quot;)</code></pre>
+<p><br/></p>
 </div>
-<div id="run-deseq2" class="section level3">
-<h3>Run DESeq2</h3>
+<div id="run-deseq2" class="section level4">
+<h4>Run DESeq2</h4>
 <p>Run DeSeq2, which returns a results file <code>res</code> with log2 fold changes, p values and adjusted p values.</p>
 <pre class="r"><code>dds &lt;- DESeq(dds)
 res &lt;- results(dds)
@@ -486,17 +495,19 @@ head(res)</code></pre>
 <p>this checks and tells you the comparison that was made (e.g. experimental vs control):</p>
 <pre class="r"><code>resultsNames(dds)</code></pre>
 <pre><code>## [1] &quot;Intercept&quot;              &quot;condition_STLC_vs_DMSO&quot;</code></pre>
+<p><br/></p>
 </div>
-<div id="optional-shrink-effect-size-for-making-graphs" class="section level3">
-<h3>(Optional) Shrink effect size for making graphs</h3>
+<div id="optional-shrink-effect-size-for-making-graphs" class="section level4">
+<h4>(Optional) Shrink effect size for making graphs</h4>
 <p>This is going to shrink effect size, using apelgm estimator (see comment in the block for why this is used):</p>
 <pre class="r"><code>resFC &lt;- lfcShrink(dds, coef=&quot;condition_STLC_vs_DMSO&quot;, type=&quot;apeglm&quot;)
 head(resLFC)
 # Shrinkage is not needed for text-based analysis, So the estimator
 # output is written to a different variable.  This would be useful for graphing.</code></pre>
+<p><br/></p>
 </div>
-<div id="examine-the-output-of-the-differential-expression-analysis" class="section level3">
-<h3>Examine the output of the differential expression analysis</h3>
+<div id="examine-the-output-of-the-differential-expression-analysis" class="section level4">
+<h4>Examine the output of the differential expression analysis</h4>
 <p>Order your data list in any way you’d like, here it’s ordered by pvalue:</p>
 <pre class="r"><code>resOrdered &lt;- res[order(res$pvalue),]
 summary(res)</code></pre>
@@ -524,9 +535,10 @@ any(duplicated(rownames(res)))</code></pre>
 <pre><code>## [1] FALSE</code></pre>
 <pre class="r"><code>any(duplicated(colnames(res)))</code></pre>
 <pre><code>## [1] FALSE</code></pre>
+<p><br/></p>
 </div>
-<div id="add-common-gene-names-and-short-descriptions-to-your-deseq2-output" class="section level3">
-<h3>Add common gene names and short descriptions to your DESeq2 output</h3>
+<div id="add-common-gene-names-and-short-descriptions-to-your-deseq2-output" class="section level4">
+<h4>Add common gene names and short descriptions to your DESeq2 output</h4>
 <p>load these libraries to prepare to add gene annotations to the dataset:</p>
 <pre class="r"><code>library(&quot;AnnotationDbi&quot;)
 library(&quot;org.Mm.eg.db&quot;)</code></pre>
@@ -563,9 +575,10 @@ head(ens.str2)</code></pre>
 ## ENSMUSG00000094463 1.35859e-06          NA</code></pre>
 <p>this turns the resOrdered object into a dataframe in prep for writing to csv file.</p>
 <pre class="r"><code>resOrdered_df &lt;- as.data.frame(resOrdered)</code></pre>
+<p><br/></p>
 </div>
-<div id="write-your-analysis-to-a-.csv-file" class="section level3">
-<h3>Write your analysis to a .csv file</h3>
+<div id="write-your-analysis-to-a-.csv-file" class="section level4">
+<h4>Write your analysis to a .csv file</h4>
 <p>This now executes a block which does: 1) converts our DESeq2 results to a dataframe 2) makes a merged table that sums together gene names and descriptions</p>
 <pre class="r"><code># this will make a dataframe out of merged gene names and shrot descriptions.
 gene_desc &lt;- merge(org.Mm.egSYMBOL, org.Mm.egGENENAME)

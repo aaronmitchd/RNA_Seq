@@ -21,7 +21,9 @@ To see the beginning of the workflow from raw sequencing reads (fastq files) to 
 Here, we start with `.h5` files already ordered into a directory, and we have already created a `.txt` files that describes the experimental paradigm, including samples and conditions.  
 If you are executing this for the very first time, see this file [Install Packages](https://aaronmitchd.github.io/RNA_Seq/Install-Packages.html) for information on how to download all the packages you will need, which you'll need to do first before you can implement the function `library()`.
 
-### Load your libraries:
+<br/>
+
+#### Load your libraries:
 
 ```{r libraries,message=FALSE}
 library("tximport")
@@ -33,7 +35,9 @@ library("DESeq2")
 library("pacman")
 ```
 
-### Set up your working directory
+<br/>
+
+#### Set up your working directory
 
 Set the file path to the folder that contains: 
 1) A directory of folders wtih each of your abundance.h5 files from the kallisto operation, and contains 
@@ -50,7 +54,9 @@ dir <- dir(file.path("./"))
 head(dir)
 ```
 
-### Make a dataframe that describes your experimental conditions
+<br/>
+
+#### Make a dataframe that describes your experimental conditions
 Turn the list of sample names into a dataframe:
 
 ```{r samples df}
@@ -79,7 +85,9 @@ names(files) <- paste0("sample", 1:6)
 files
 ```
 
-### Making the TxDb database to relate transcript name to gene name 
+<br/>
+
+#### Making the TxDb database to relate transcript name to gene name 
 
 Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is important, and somewhat tricky. A few different vignettes suggested codes that did not work for me.  Luckily, the authors of kallisto maintain [a database of tarball downloads](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a `.gtf` file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism's gtf file as input into TxDb, making it into a TxDb dataframe.
 Simply navigate to the directory and file where you extracted the tarball (via Unix/Linux, on Windows Linux using WSL/Ubuntu, or on Mac) and you're good to go.
@@ -108,7 +116,9 @@ tx_map <- select(txdb, keys = k, columns="GENEID", keytype="TXNAME")
 head(tx_map)
 ```
 
-### Run tximport
+<br/>
+
+#### Run tximport
 
 Run tximport, and outputs to a dataframe txi.kallisto:
 
@@ -120,7 +130,9 @@ txi.kallisto <- tximport(files, type = "kallisto", tx2gene=tx2gene, ignoreTxVers
 head(txi.kallisto$counts)
 ```
 
-### Make a DESeq2 object
+<br/>
+
+#### Make a DESeq2 object
 
 Turn the tximport dataset into a DeSeq2 object, called a DeSeqDataset:
 
@@ -131,7 +143,9 @@ ddsTxi <- DESeqDataSetFromTximport(txi.kallisto,
 ddsTxi
 ```
 
-### Prefilter the reads to remove low read counts
+<br/>
+
+#### Prefilter the reads to remove low read counts
 
 This prefiltering step is suggested in the DESeq2 vignette.
 It removes any rows that have less than a total of 10 reads across all samples:
@@ -143,7 +157,9 @@ dds
 # the above prefiltering function got rid of many transcripts (36047-x=20185)
 ```
 
-### Make sure DESeq2 compares the correct experimental conditions.
+<br/>
+
+#### Make sure DESeq2 compares the correct experimental conditions.
 
 This next step will just make sure comparisons are made to the correct control. name the ref to whatever your control condition is named (here it's DMSO):
 
@@ -151,7 +167,9 @@ This next step will just make sure comparisons are made to the correct control. 
 dds$condition <- relevel(dds$condition, ref = "DMSO")
 ```
 
-### Run DESeq2
+<br/>
+
+#### Run DESeq2
 
 Run DeSeq2, which returns a results file `res` with log2 fold changes, p values and adjusted p values.
 
@@ -167,7 +185,9 @@ this checks and tells you the comparison that was made (e.g. experimental vs con
 resultsNames(dds)
 ```
 
-### (Optional) Shrink effect size for making graphs
+<br/>
+
+#### (Optional) Shrink effect size for making graphs
 This is going to shrink effect size, using apelgm estimator (see comment in the block for why this is used):
 
 ```{r shrink, eval=FALSE}
@@ -177,7 +197,9 @@ head(resLFC)
 # output is written to a different variable.  This would be useful for graphing.
 ```
 
-### Examine the output of the differential expression analysis
+<br/>
+
+#### Examine the output of the differential expression analysis
 
 Order your data list in any way you'd like, here it's ordered by pvalue:
 
@@ -209,7 +231,9 @@ any(duplicated(rownames(res)))
 any(duplicated(colnames(res)))
 ```
 
-### Add common gene names and short descriptions to your DESeq2 output
+<br/>
+
+#### Add common gene names and short descriptions to your DESeq2 output
 
 load these libraries to prepare to add gene annotations to the dataset:
 
@@ -238,7 +262,9 @@ this turns the resOrdered object into a dataframe in prep for writing to csv fil
 resOrdered_df <- as.data.frame(resOrdered)
 ```
 
-### Write your analysis to a .csv file
+<br/>
+
+#### Write your analysis to a .csv file
 
 This now executes a block which does:
 1) converts our DESeq2 results to a dataframe
