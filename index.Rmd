@@ -21,10 +21,11 @@ Easy to follow bioinformatics workflows on the command line, bash (Linux), R, Py
 
 ## RNA-Seq
 
-1. going from raw sequencing reads to kallisto pseudoalignment mapping.
+1. Going from raw sequencing reads to kallisto pseudoalignment mapping.
     [Raw Sequencing Reads -> filtering(FastQC, TrimGalore) -> kallisto](https://aaronmitchd.github.io/RNA_Seq/raw_seq_reads_to_kallisto.html)
-2. using kallisto abundance files for differential expression analysis.
+2. Using kallisto abundance files for differential expression analysis.
     [kallisto abundance.h5 -> tximport -> DESeq2](https://aaronmitchd.github.io/RNA_Seq/kallisto_h5_to_tximport_to_DESeq2_eval.html)
+3. Installing necessary programs and packages: [Install Packages](https://aaronmitchd.github.io/RNA_Seq/Install-Packages.html)
 
 </div>
 <div class="col-sm-6">

@@ -28,7 +28,7 @@ This is the first part of a tutorial designed to walk you through a full RNA-Seq
 
 For Mac Users: you already run bash in the terminal so you are good to go.
 
-For Windows Users: you need to download and install WSL (Windows Subsystem for Linux), then use the command $: bash on the command line to open the bash/Linux shell.  The easiest way to do this is the 1) enable WSL and 2) download Ubuntu for windows by following the instructions [here](https://ubuntu.com/wsl).  WARNING: This install can take up to an hour on a laptop.  Time for a coffee break.
+For Windows Users: you need to download and install WSL (Windows Subsystem for Linux), then use the command `bash` on the command line to open the bash/Linux shell.  The easiest way to do this is the 1) enable WSL and 2) download Ubuntu for windows by following the instructions [here](https://ubuntu.com/wsl).  WARNING: This install can take up to an hour on a laptop.  Time for a coffee break.
 
 ### Make sure you have anaconda/bioconda and python installed
 
@@ -45,7 +45,7 @@ conda config --add channels conda-forge
 
 ### Install all the programs and packages you'll need for this workflow
 
-To see the list of programs and packages you'll need, navigate to the [Install Resources]() page in this tutorial.  You'll want to install all the packages, programs, and libraries you need right at the beginning, for a good flow when you're programming.  This may take a while, including installing RStudio and all the R packages for the second half of this tutorial.
+To see the list of programs and packages you'll need, navigate to the [Install Resources](https://aaronmitchd.github.io/RNA_Seq/Install-Resources.html) page in this tutorial.  You'll want to install all the packages, programs, and libraries you need right at the beginning, for a good flow when you're programming.  This may take a while, including installing RStudio and all the R packages for the second half of this tutorial.
 
 ### Download your sequencing files and run FastQC
 
@@ -57,7 +57,7 @@ In the output file, you'll find information on sequencing quality and presence o
 
 ### Open bash terminal
 
-On Mac open the Terminal, or on Windows open the command prompt and type 'bash'.
+On Mac open the Terminal, or on Windows open the command prompt and type `bash`.
 
 ### Update conda
 
@@ -83,7 +83,7 @@ conda activate RNA
 
 ### Install TrimGalore
 
-TrimGalore depends on cutadapt and FastQC (optional), so you'll need to install those.  Once you are in your conda RNA environment (you can check by running 'conda env list' and the '*' will tell you which one you are currently in), install cutadapt then FastQC:
+TrimGalore depends on cutadapt and FastQC (optional), so you'll need to install those.  Once you are in your conda RNA environment (you can check by running `conda env list` and the `*` will tell you which one you are currently in), install cutadapt then FastQC:
 
 ```{bash, eval=FALSE}
 conda install -c bioconda cutadapt
@@ -104,13 +104,13 @@ curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o tr
 tar xvzf trim_galore.tar.gz
 ```
 
-To run TrimGalore with default options and run FastQC after '[your trimgalore directory]_trim_galore --fastqc <path and filename>':
+To run TrimGalore with default options and run FastQC after: `[your trimgalore directory]_trim_galore --fastqc <path and filename>`
 
 ```{bash, eval=FALSE}
 /mnt/c/Users/Amdprograms/TrimGalore-0.6.5/trim_galore --fastqc <filename>
 ```
 
-If you are advanced, you can run a short for loop to run trim galore on all files in a folder, and walk away.  this could take several hours depending on filesize and number.
+If you are advanced, you can run a short for loop to run trim galore on all files in a folder.  this could take several hours depending on filesize and number.
 
 ### Concatenate samples run on multiple lanes
 
@@ -127,7 +127,7 @@ Or you can even cat files from one folder and then put the output file in a diff
 cat ./Aaron_data_copy/Aaron_5190_181108B1/5190-S5_S105_L00* > ./Untrimmed/5190-S5.fastq.gz
 ```
 
-The * means ignore any other characters other than the ones displayed.  This is an easy way to say "include all the files with the substring '*important_chars*'" to the compiler.
+The `*` means ignore any other characters other than the ones displayed.  This is an easy way to say "include all the files with the substring `*important_chars*` to the compiler.
 
 Now that you have your files, and they are pre-processed, you can run kallisto.  kallisto is run in two steps:
 
@@ -161,20 +161,20 @@ Now, in the extracted folder you have your .idx file which you can just point to
 
 ### Run kallisto
 
-Now, we will run kallisto on each sample.  It is highly recommended you read the manual before you run your samples.  Here, we will provide some simple instruction.  Kallisto defaults to paired-end reads, so it will accept two files and compute the pairs.  If you have single-end reads, you'll provide an argument and it requires you to define your read length '-l' and standard deviation '-s' (you will know these values from your FASTQC run).
+Now, we will run kallisto on each sample.  It is highly recommended you read the manual before you run your samples.  Here, we will provide some simple instruction.  Kallisto defaults to paired-end reads, so it will accept two files and compute the pairs.  If you have single-end reads, you'll provide an argument and it requires you to define your read length `-l` and standard deviation `-s` (you will know these values from your FASTQC run).
 
 Navigate to the directory containing all your samples.
 
-Here, we run kallisto on single-end reads with 100 bootstraps '-b':
+Here, we run kallisto on single-end reads with 100 bootstraps `-b`:
 
 ```{bash, eval=FALSE}
 kallisto quant -i mouse.idx -o /mnt/c/Users/AMDprograms/Desktop/6h/sample1output -b 100 --single -l 51 -s 5 ./filename/of/working/directory.fastq.gz
 ```
 
 Advanced users can run a for loop to iterate through the samples.  if you do this, MAKE SURE you indicate a new output folder each time.  something like this 
-'-o ./kallisto/sample1output'
+`-o ./kallisto/sample1output`
 then
-'-o ./kallist/sample2output'
+`-o ./kallist/sample2output`
 otherwise you'll just keep overwriting your abundance.h5 files.
 
 Once you have folders for each sample with your kallisto output files, you are ready to move onto part two of this walkthrough!

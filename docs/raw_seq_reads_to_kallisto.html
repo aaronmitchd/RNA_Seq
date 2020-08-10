@@ -282,6 +282,9 @@ $(document).ready(function () {
   <a href="kallisto_h5_to_tximport_to_DESeq2_eval.html">Kallisto to DESeq2</a>
 </li>
 <li>
+  <a href="Install-Packages.html">Install Packages</a>
+</li>
+<li>
   <a href="About-and-References.html">About and References</a>
 </li>
       </ul>
@@ -310,7 +313,7 @@ $(document).ready(function () {
 <div id="make-sure-you-can-run-bashlinux" class="section level3">
 <h3>Make sure you can run bash/linux</h3>
 <p>For Mac Users: you already run bash in the terminal so you are good to go.</p>
-<p>For Windows Users: you need to download and install WSL (Windows Subsystem for Linux), then use the command $: bash on the command line to open the bash/Linux shell. The easiest way to do this is the 1) enable WSL and 2) download Ubuntu for windows by following the instructions <a href="https://ubuntu.com/wsl">here</a>. WARNING: This install can take up to an hour on a laptop. Time for a coffee break.</p>
+<p>For Windows Users: you need to download and install WSL (Windows Subsystem for Linux), then use the command <code>bash</code> on the command line to open the bash/Linux shell. The easiest way to do this is the 1) enable WSL and 2) download Ubuntu for windows by following the instructions <a href="https://ubuntu.com/wsl">here</a>. WARNING: This install can take up to an hour on a laptop. Time for a coffee break.</p>
 </div>
 <div id="make-sure-you-have-anacondabioconda-and-python-installed" class="section level3">
 <h3>Make sure you have anaconda/bioconda and python installed</h3>
@@ -324,7 +327,7 @@ conda config --add channels conda-forge</code></pre>
 </div>
 <div id="install-all-the-programs-and-packages-youll-need-for-this-workflow" class="section level3">
 <h3>Install all the programs and packages you’ll need for this workflow</h3>
-<p>To see the list of programs and packages you’ll need, navigate to the <a href="">Install Resources</a> page in this tutorial. You’ll want to install all the packages, programs, and libraries you need right at the beginning, for a good flow when you’re programming. This may take a while, including installing RStudio and all the R packages for the second half of this tutorial.</p>
+<p>To see the list of programs and packages you’ll need, navigate to the <a href="https://aaronmitchd.github.io/RNA_Seq/Install-Resources.html">Install Resources</a> page in this tutorial. You’ll want to install all the packages, programs, and libraries you need right at the beginning, for a good flow when you’re programming. This may take a while, including installing RStudio and all the R packages for the second half of this tutorial.</p>
 </div>
 <div id="download-your-sequencing-files-and-run-fastqc" class="section level3">
 <h3>Download your sequencing files and run FastQC</h3>
@@ -336,7 +339,7 @@ conda config --add channels conda-forge</code></pre>
 </div>
 <div id="open-bash-terminal" class="section level3">
 <h3>Open bash terminal</h3>
-<p>On Mac open the Terminal, or on Windows open the command prompt and type ‘bash’.</p>
+<p>On Mac open the Terminal, or on Windows open the command prompt and type <code>bash</code>.</p>
 </div>
 <div id="update-conda" class="section level3">
 <h3>Update conda</h3>
@@ -354,7 +357,7 @@ conda config --add channels conda-forge</code></pre>
 </div>
 <div id="install-trimgalore" class="section level3">
 <h3>Install TrimGalore</h3>
-<p>TrimGalore depends on cutadapt and FastQC (optional), so you’ll need to install those. Once you are in your conda RNA environment (you can check by running ‘conda env list’ and the ’*’ will tell you which one you are currently in), install cutadapt then FastQC:</p>
+<p>TrimGalore depends on cutadapt and FastQC (optional), so you’ll need to install those. Once you are in your conda RNA environment (you can check by running <code>conda env list</code> and the <code>*</code> will tell you which one you are currently in), install cutadapt then FastQC:</p>
 <pre class="bash"><code>conda install -c bioconda cutadapt
 sudo apt install fastqc</code></pre>
 <p>Check versions to make sure they installed:</p>
@@ -363,9 +366,9 @@ fastqc -v</code></pre>
 <p>Then install TrimGalore if you need to trim adapters and check read quality.</p>
 <pre class="bash"><code>curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
 tar xvzf trim_galore.tar.gz</code></pre>
-<p>To run TrimGalore with default options and run FastQC after ’[your trimgalore directory]_trim_galore –fastqc <path and filename>’:</p>
+<p>To run TrimGalore with default options and run FastQC after: <code>[your trimgalore directory]_trim_galore --fastqc &lt;path and filename&gt;</code></p>
 <pre class="bash"><code>/mnt/c/Users/Amdprograms/TrimGalore-0.6.5/trim_galore --fastqc &lt;filename&gt;</code></pre>
-<p>If you are advanced, you can run a short for loop to run trim galore on all files in a folder, and walk away. this could take several hours depending on filesize and number.</p>
+<p>If you are advanced, you can run a short for loop to run trim galore on all files in a folder. this could take several hours depending on filesize and number.</p>
 </div>
 <div id="concatenate-samples-run-on-multiple-lanes" class="section level3">
 <h3>Concatenate samples run on multiple lanes</h3>
@@ -374,7 +377,7 @@ tar xvzf trim_galore.tar.gz</code></pre>
 # NOTE: SAVE YOUR FILES AS fastq.gz</code></pre>
 <p>Or you can even cat files from one folder and then put the output file in a different folder:</p>
 <pre class="bash"><code>cat ./Aaron_data_copy/Aaron_5190_181108B1/5190-S5_S105_L00* &gt; ./Untrimmed/5190-S5.fastq.gz</code></pre>
-<p>The * means ignore any other characters other than the ones displayed. This is an easy way to say “include all the files with the substring ‘<em>important_chars</em>’” to the compiler.</p>
+<p>The <code>*</code> means ignore any other characters other than the ones displayed. This is an easy way to say "include all the files with the substring <code>*important_chars*</code> to the compiler.</p>
 <p>Now that you have your files, and they are pre-processed, you can run kallisto. kallisto is run in two steps:</p>
 <ol style="list-style-type: decimal">
 <li>generate an index file called a kallisto index file</li>
@@ -400,11 +403,11 @@ kallisto</code></pre>
 </div>
 <div id="run-kallisto" class="section level3">
 <h3>Run kallisto</h3>
-<p>Now, we will run kallisto on each sample. It is highly recommended you read the manual before you run your samples. Here, we will provide some simple instruction. Kallisto defaults to paired-end reads, so it will accept two files and compute the pairs. If you have single-end reads, you’ll provide an argument and it requires you to define your read length ‘-l’ and standard deviation ‘-s’ (you will know these values from your FASTQC run).</p>
+<p>Now, we will run kallisto on each sample. It is highly recommended you read the manual before you run your samples. Here, we will provide some simple instruction. Kallisto defaults to paired-end reads, so it will accept two files and compute the pairs. If you have single-end reads, you’ll provide an argument and it requires you to define your read length <code>-l</code> and standard deviation <code>-s</code> (you will know these values from your FASTQC run).</p>
 <p>Navigate to the directory containing all your samples.</p>
-<p>Here, we run kallisto on single-end reads with 100 bootstraps ‘-b’:</p>
+<p>Here, we run kallisto on single-end reads with 100 bootstraps <code>-b</code>:</p>
 <pre class="bash"><code>kallisto quant -i mouse.idx -o /mnt/c/Users/AMDprograms/Desktop/6h/sample1output -b 100 --single -l 51 -s 5 ./filename/of/working/directory.fastq.gz</code></pre>
-<p>Advanced users can run a for loop to iterate through the samples. if you do this, MAKE SURE you indicate a new output folder each time. something like this ‘-o ./kallisto/sample1output’ then ‘-o ./kallist/sample2output’ otherwise you’ll just keep overwriting your abundance.h5 files.</p>
+<p>Advanced users can run a for loop to iterate through the samples. if you do this, MAKE SURE you indicate a new output folder each time. something like this <code>-o ./kallisto/sample1output</code> then <code>-o ./kallist/sample2output</code> otherwise you’ll just keep overwriting your abundance.h5 files.</p>
 <p>Once you have folders for each sample with your kallisto output files, you are ready to move onto part two of this walkthrough!</p>
 </div>
 </div>
