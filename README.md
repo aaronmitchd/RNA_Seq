@@ -1,5 +1,5 @@
 
-### AMD Bioinformatics
+# AMD Bioinformatics
 
 These walkthroughs were created by Aaron Mitchell-Dick.  They are based off of vignettes from source packages (see links to package vignettes/walkthroughs below).  These walkthroughs are intended to be thorough enough that a user with beginning knowledge in bioinformatics can perform RNA-Seq analysis from scratch. They display commenting on common techniques an advanced user would already know.  In addition to these, there are a lot of other great resources for beginniners that do not necessitate hard lessons in coding. For example [Galaxy](https://galaxyproject.org) is an excellent resource for the entire bioinformatics community, and it's free.  Any questions or commments please email aaron.mitchell.dick@duke.edu.  Enjoy!
 
