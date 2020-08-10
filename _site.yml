@@ -4,10 +4,8 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Raw Reads to Kallisto"
-      href: raw_seq_reads_to_kallsto.html
     - text: "Raw Reads to kallisto"
-      href: raw_seq_reads_to_kallsto.html
+      href: raw_seq_reads_to_kallisto.html
     - text: "Kallisto to DESeq2"
       href: kallisto_h5_to_tximport_to_DESeq2_eval.html
     - text: "About and References"
