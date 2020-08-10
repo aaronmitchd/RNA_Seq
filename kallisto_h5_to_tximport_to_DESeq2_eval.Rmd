@@ -1,0 +1,251 @@
+---
+title: "kallisto h5 files -> tximport -> DESeq2 Walkthrough"
+author: "Aaron Mitchell-Dick"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = 'C:/Users/AMDprograms/Desktop/Untrimmed/')
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+```
+
+<br/>
+<br/>
+
+## RNA-seq analysis using kallisto, tximport, and DeSeq2
+
+This walkthrough was built by combining the information from several vignettes in order to streamline workflow from kallisto output files.  
+To see the beginning of the workflow from raw sequencing reads (fastq files) to finished kallisto output directory, see <>.  
+Here, we start with .h5 files already ordered into a directory, and we have already created a .txt files that describes the experimental paradigm, including samples and conditions.  
+If you are executing this for the very first time, see this file <> for information on how to download all the packages you will need, which you'll need to do first before you can implement the function library().
+
+Load your libraries:
+
+```{r libraries,message=FALSE}
+library("tximport")
+library("readr")
+library("tximportData")
+library("rhdf5")
+library("GenomicFeatures")
+library("DESeq2")
+library("pacman")
+```
+
+This sets the file path to the folder that contains 
+1) all your .h5 files from the kallisto operation, and contains 
+2) the .txt file describing samples and conditions
+
+```{r directory, eval=FALSE}
+setwd("C:/Users/AMDprograms/Desktop/Untrimmed/")
+```
+
+This turns the folder contents into a dataframe called dir:
+
+```{r dir df,message=FALSE}
+dir <- dir(file.path("./"))
+head(dir)
+```
+
+This turns the list of sample names into a dataframe:
+
+```{r samples df}
+samples <- read.table(file.path("./samples.txt"), header=TRUE)
+samples
+```
+
+This makes a dataframe with rows listed by sample name:
+
+```{r samples rows}
+rownames(samples) <- samples$sample
+samples
+```
+
+This makes a dataframe that lists the full path to all the kallisto .h5 files:
+
+```{r .h5 file path}
+files <- file.path("./kallisto", samples$sample, "abundance.h5")
+files
+```
+
+This adds column headers to the files dataframe ordered "samples[+n]", all this does is provide columns for each sample's reads:
+
+```{r smaples to rows}
+names(files) <- paste0("sample", 1:6)
+files
+```
+
+# options for making the TxDb database 
+Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is somewhat tricky, and a few different vignettes suggested codes that did not work for me here.  Luckily, the authors of kallisto maintain a database of tarball downloads that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a .gtf file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism's gtf file and to input into TxDb, making it into a TxDb dataframe.
+Simply navigate to the directory and file where you extracted the tarball (via Unix/Linux, on Windows Linux using WSL/Ubuntu, or on Mac) and you're good to go.
+
+```{r tarball gtf,message=FALSE}
+txdb <- makeTxDbFromGFF("C:/Users/AMDprograms/Downloads/mus_musculus/mus_musculus/Mus_musculus.GRCm38.96.gtf")
+```
+
+You can check what this data type is like by calling these:
+
+```{r check}
+columns(txdb)
+keytypes(txdb)
+```
+
+This accepts txdb txnames as a key and turns it into a df to be used for making a 1:1 table of txnames to geneids:
+
+```{r keymaker}
+k <- keys(txdb, keytype = "TXNAME")
+```
+
+This makes a df that maps txnames to geneids, allowing tximport to work:
+
+```{r tx map}
+tx_map <- select(txdb, keys = k, columns="GENEID", keytype="TXNAME")
+head(tx_map)
+```
+
+This runs tximport, and outputs to a dataframe txi.kallisto:
+
+```{r tximport}
+#convert dataframe to new name
+tx2gene <- tx_map
+# then
+txi.kallisto <- tximport(files, type = "kallisto", tx2gene=tx2gene, ignoreTxVersion = TRUE)
+head(txi.kallisto$counts)
+```
+
+this turns the tximport dataset into a DeSeq2 object, called a DeSeqDataset:
+
+```{r txi to dds,message=FALSE}
+ddsTxi <- DESeqDataSetFromTximport(txi.kallisto,
+                                   colData = samples,
+                                   design = ~ condition)
+ddsTxi
+```
+
+this is a prefiltering step suggested in the DESeq2 vignette.
+it removes any rows that have less than a total of 10 reads across all samples:
+
+```{r prefilter}
+keep <- rowSums(counts(ddsTxi)) >= 10
+dds <- ddsTxi[keep,]
+dds
+# the above prefiltering function got rid of many transcripts (36047-x=20185)
+```
+
+this next step will just make sure comparisons are made to the correct control. name the ref to whatever your control condition is named (here it's DMSO):
+
+```{r set comparison}
+dds$condition <- relevel(dds$condition, ref = "DMSO")
+```
+
+this runs DeSeq2, and returns a results file "res" with log2 fold changes, p values and adjusted p values.
+
+```{r DeSeq2, message=FALSE}
+dds <- DESeq(dds)
+res <- results(dds)
+head(res)
+```
+
+this checks and tells you the comparison that was made (e.g. experimental vs control):
+
+```{r rightcomparison}
+resultsNames(dds)
+```
+
+this is going to shrink effect size, using apelgm estimator (see comment in the block for why this is used):
+
+```{r shrink, eval=FALSE}
+resFC <- lfcShrink(dds, coef="condition_STLC_vs_DMSO", type="apeglm")
+head(resLFC)
+# shrinkage is not recommended for writing results to a csv so the shrinkage
+# estimator is written to a different variable.  only useful for graphing.
+```
+
+you can order your data list in any way you'd like, here it's ordered by pvalue:
+
+```{r order}
+resOrdered <- res[order(res$pvalue),]
+summary(res)
+```
+
+you can filter your summary by any parameters you'd like, here its padj <0.1:
+
+```{r cutoff}
+sum(res$padj < 0.1, na.rm=TRUE)
+```
+
+this writes your results to a file:
+
+```{r write, eval=FALSE}
+write.csv(as.data.frame(resOrdered), 
+          file="0h_STLC_vs_DMSO.csv")
+#you can write this file to output but it is not as detailed as the file 
+#that is output below, which contains gene descriptions.
+```
+
+
+```{r correct}
+#check rownames are correct
+head(rownames(res))
+#check col names are correct
+colnames(res)
+```
+
+check if all mapping of the data is good
+
+```{r mapping correct}
+#check if all mapping of the data is good
+any(duplicated(rownames(res)))
+any(duplicated(colnames(res)))
+```
+
+load these libraries to prepare to add gene annotations to the dataset:
+
+```{r load,message=FALSE}
+library("AnnotationDbi")
+library("org.Mm.eg.db")
+```
+
+this appends gene names (symbols) to the results file:
+
+```{r naming}
+ens.str2 <- rownames(resOrdered)
+head(ens.str2)
+resOrdered$symbol <- mapIds(org.Mm.eg.db,
+                     keys=ens.str2,
+                     column="SYMBOL",
+                     keytype="ENSEMBL",
+                     multiVals="first")
+head(resOrdered)
+```
+
+
+this turns the resOrdered object into a dataframe in prep for writing to csv file.
+
+```{r convert df}
+resOrdered_df <- as.data.frame(resOrdered)
+```
+
+
+This now executes a block which does:
+1) converts our DESeq2 results to a dataframe
+2) makes a merged table that sums together gene names and descriptions
+
+
+```{r merge and write final}
+# this will make a dataframe out of merged gene names and shrot descriptions.
+gene_desc <- merge(org.Mm.egSYMBOL, org.Mm.egGENENAME)
+# we then create a new dataframe merging the gene descriptions to the modified DeSeq2 output.
+res_desc <- merge(resOrdered_df, gene_desc)
+head(res_desc)
+```
+
+this writes a file that contains gene names, DiffEx data, stats, and gene descriptions all together to the current working directory.
+
+```{r final write, eval=FALSE}
+write.csv(res_desc, 
+          file="gene_desc_0h_STLC_vs_DMSO.csv")
+```
+
+Your data is now readable in R, command line, or excel!
