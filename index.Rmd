@@ -17,19 +17,21 @@ output: html_document
 
 # **AMD Bioinformatics Homepage**
 
-Easy to follow bioinformatics workflows on the command line, bash (Linux), R, Python, and github.  Aaron is a PhD in Cell Biology, specializing in neural development, human stem cell/iPSC culture, and bioinformatics.
+Easy to follow bioinformatics workflows on the command line, bash (Linux), R, Python, and github.
 
 ## RNA-Seq
 
 1. going from raw sequencing reads to kallisto pseudoalignment mapping.
-    [Raw Sequencing Reads -> filtering(FastQC, TrimGalore) -> kallisto]()
+    [Raw Sequencing Reads -> filtering(FastQC, TrimGalore) -> kallisto](https://aaronmitchd.github.io/RNA_Seq/raw_seq_reads_to_kallisto.html)
 2. using kallisto abundance files for differential expression analysis.
     [kallisto abundance.h5 -> tximport -> DESeq2](https://aaronmitchd.github.io/RNA_Seq/kallisto_h5_to_tximport_to_DESeq2_eval.html)
 
 </div>
 <div class="col-sm-6">
 
-### [Google Scholar Citations](https://crumplab.github.io)
+### About the webpage and author
+#### [Github](https://aaronmitchd.github.io/RNA_Seq/About-and-References.html)
+#### [Google Scholar Citations](https://tinyurl.com/AMD-GS-CV)
 
 
 </a>
