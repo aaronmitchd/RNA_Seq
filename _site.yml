@@ -4,8 +4,8 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Journal"
-      href: Journal.html
+    - text: "Raw Reads to Kallisto"
+      href: raw_seq_reads_to_kallsto.html
     - text: "Raw Reads to kallisto"
       href: raw_seq_reads_to_kallsto.html
     - text: "Kallisto to DESeq2"
