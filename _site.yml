@@ -8,6 +8,8 @@ navbar:
       href: raw_seq_reads_to_kallisto.html
     - text: "Kallisto to DESeq2"
       href: kallisto_h5_to_tximport_to_DESeq2_eval.html
+    - text: "Install Packages"
+      href: Install-Packages.html
     - text: "About and References"
       href: About-and-References.html
 output_dir: "docs"

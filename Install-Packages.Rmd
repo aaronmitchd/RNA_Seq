@@ -1,0 +1,265 @@
+---
+title: "Installing Programs and Packages for RNA-Seq Analysis"
+author: "Aaron Mitchell-Dick"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+##knitr::opts_knit$set(root.dir = 'C:/Users/AMDprograms/Desktop/Untrimmed/')
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+```
+
+<br/>
+<br/>
+
+
+## Getting Prepared for Analysis
+
+###### Note: make sure your username on Mac/Windows and your filestructure do not contain spaces.  
+###### Spaces in your PATH will cause errors. If you need to, create a new user on your PC/Mac before you start programming
+
+<br/>
+
+
+The first time you perform RNA-Seq you will need to download a slew of programs, packages, and files, enabling you to perform the analysis.  This short walkthrough will help you prepare your digital workspace in a streamlined manner.  For example, you can find all bioconductor `install.packages()` commands here, rather than searching every single one.  This walkthough will take you through:
+
+<br/>
+
+0) Setting up Linux/Unix for Mac or Windows
+1) Downloading and Installing Anaconda with python.
+2) Setting up bioconda
+3) Downloading and installing RStudio
+4) Downloading, installing, and running FastQC
+5) Downloading, installing, and running TrimGalore
+6) Downloading, installing, and running kallisto
+7) Downloading, installing, and running tximport
+8) Downloading, installing, and running DESeq2
+9) Downloading all required anaconda libraries
+10) Downloading all required R packages
+
+<br/>
+
+#### Setting up your environment
+
+Mac: You already are running on Linux/Unix so you just need to open up a terminal with `command+space` and type `Terminal` then press enter.
+
+Windows: You will need to download WSL (Windows Subsystem for Linux) and install Ubuntu, or your linux distribution of choice (we recommend Ubuntu for Windows).  Follow the instructions below or [follow along to this youtube video](https://www.youtube.com/watch?v=xzgwDbe7foQ).  
+
+1) Click on the windows icon
+2) Type `features` and click on `Turn Windows features on or off`
+3) Scroll down to find `Windows Subsystem for Linux` and check the box.  click ok.
+4) Restart your computer.
+5) Click the windows icon, search `microsoft store` and click the microsoft store.
+6) Search Ubuntu and download/install Ubuntu.
+7) Click the windows icon, navigate to `U` and you should see Ubuntu
+8) Click on Ubuntu to open the ubuntu terminal, and it will say `installing...`
+9) The installation could take up to 45 minutes or and hour.
+10) Enter a username and password.  you are now in the Linux environment
+11) At any time you can open command line and input `bash` to run Linux on WSL.
+
+<br/>
+
+#### Navigating bash on Linux
+
+Simple useful commands for bash:
+
+1) `pwd` will pass the working directory
+2) `cd ./folder/folder/etc` will change the current working directory
+3) `./` is a shortcut for current working directory
+4) `ls` will list the files and folders in the current directory.
+5) `nano <filename.txt>` will open the nano text editor to view the text file.
+6) `head <filename>` will show the first 20 lines of the file contents.
+7) `cd ..` will navigate up one directory
+8) `cd ~` will navigate to your home directory.
+
+<br/>
+
+#### Download Anaconda
+
+[Download Anaconda here](https://www.anaconda.com/products/individual) and install it.
+
+This will install:\
+1) Anaconda\
+2) Python\
+3) And you can also choose to install Jupyter Notebooks/Spyder IDE, which is recommended.
+
+You can check your version of python in bash/Linux by typing `python`. This also enters the python environment on the command line.  exit by typing  `exit()`.
+
+<br/>
+
+#### Set up Bioconda
+
+Set up Bioconda by typing in bash:
+
+```{bash, eval=FALSE}
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+Then run updates to update all available packages
+
+```{bash, eval=FALSE}
+conda update all
+```
+
+If you need the instructions, [the website instructions are here](https://bioconda.github.io/user/install.html)
+
+<br/>
+
+#### Install RStudio
+
+[Download RStudio](https://rstudio.com/products/rstudio/download/) and install it.  
+
+###### Run R Studio as administrator when downloading packages.  
+
+If you are having trouble downloading packages into the correct library, You can run RStudio as an administrator on windows by right clicking the RStudio icon and running as administrator.
+
+<br/>
+
+#### Install Java
+
+some programs like FastQC depend on Java. to check if you have java, on bash or command line type `java -version`.  [Install java here](https://java.com/en/download/help/download_options.xml).  once java is installed, check it is installed correctly by again typing `java -version`.
+
+<br/>
+
+#### Install FastQC
+
+[Download FastQC here](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) and install it by unzipping the downloaded file.  On windows, you can unzip files by right clicking, and using Windows Explorer to open the file.  Move the application folder to a new location, and it is now unzipped.
+
+Open the FastQC GUI by following the instructions from the website:
+
+Windows: Simply double click on the run_fastqc bat file.  If you want to make a pretty shortcut then we've included an icon file in the top level directory so you don't have to use the generic bat file icon.
+
+MacOSX: Double click on the FastQC application icon.
+
+<br/>
+
+#### Create a new conda environment
+
+Notice that to the left of your cursor, the line begins with (base) or something like it.  This is telling you what environment you are in.  You want to make a new environment for each workflow you do on your computer, so that the packages you download are specific to that environment, and don't contaminate the global environment in case versions of packages are not compatible with the version of python you have, for example.  To create a new conda environment, run:
+
+```{bash, eval=FALSE}
+conda create --name RNA
+```
+
+<br/>
+
+#### Initialize the conda environment
+
+And every time you open bash to perform this RNA-Seq analysis workflow in a new session, you'll want to initialize this environment to run the packages you download here.
+
+```{bash, eval=FALSE}
+conda activate RNA
+```
+
+<br/>
+
+#### Install TrimGalore
+
+TrimGalore depends on two packages which you'll need to install first:  cutadapt and fastqc.  You can download Fastqc again, this time in your conda environment, for optionally running fastqc following TrimGalore
+
+```{bash, eval=FALSE}
+conda install -c bioconda cutadapt
+sudo apt install fastqc
+```
+
+Check versions to make sure they installed correctly
+
+```{bash, eval=FALSE}
+cutadapt --version 
+fastqc -v
+```
+
+Install TrimGalore:
+
+```{bash, eval=FALSE}
+curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
+tar xvzf trim_galore.tar.gz
+```
+
+you can extract tarballs in bash using administrator permissions (if needed) by running:
+
+```{bash, eval=FALSE}
+sudo tar -xvzf /mnt/c/PATH/TO/TAR-FILE/Desktop/FILE-NAME.tar.gz -C /mnt/c/PATH/TO/DESTINATION/FOLDER
+```
+
+<br/>
+
+##### Install Kallisto
+
+Make sure you are in the correct conda environment by passing `conda env list`.  the environment with the `*` next to it is the current environment.  Change environments by typing `conda activate environmentname`.
+
+```{bash, eval=FALSE}
+conda install kallisto
+kallisto
+```
+
+<br/>
+
+##### This concludes prep in the bash/linux/python environments
+
+You'll be prompted to install a lot of additional libraries during this process, make sure you download all of them and, at the end, it is good practice to update all the packages using `conda update all`.
+
+<br/>
+
+##### RStudio and downloading R Packages
+
+Open RStudio.  Update R. For Mac, download the latest update, then open RStudio and it will automatically install.  On Windows:
+
+```{r, eval=FALSE}
+install.packages("installr")
+library(installr)
+updateR()
+```
+
+Next, install all of these packages:
+
+```{r, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.11")
+
+install.packages("devtools")
+install.packages("tidyverse")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("tximport")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("tximportData")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("rhdf5")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("GenomicFeatures")
+
+install.packages("pacman")
+
+## or install the source package from 
+## https://cran.r-project.org/web/packages/pacman/index.html
+## and install in R with 
+## install.packages(path_to_file, repos = NULL, type="source")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("DESeq2")
+```
+
+<br/>
+
+This should download and install all of the packages you will need.  If there is a package missing, please email aaron.mitchell.dick@duke.edu and i will include it here.
+
+You should now be ready to run Part 1 and Part 2 of the RNA-Seq Walkthrough.

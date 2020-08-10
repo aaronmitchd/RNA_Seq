@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Aaron Mitchell-Dick" />
+
+
+<title>Installing Programs and Packages for RNA-Seq Analysis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Aaron Mitchell-Dick</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="raw_seq_reads_to_kallisto.html">Raw Reads to kallisto</a>
+</li>
+<li>
+  <a href="kallisto_h5_to_tximport_to_DESeq2_eval.html">Kallisto to DESeq2</a>
+</li>
+<li>
+  <a href="About-and-References.html">About and References</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Installing Programs and Packages for RNA-Seq Analysis</h1>
+<h4 class="author">Aaron Mitchell-Dick</h4>
+
+</div>
+
+
+<p><br/> <br/></p>
+<div id="getting-prepared-for-analysis" class="section level2">
+<h2>Getting Prepared for Analysis</h2>
+<div id="note-make-sure-your-username-on-macwindows-and-your-filestructure-do-not-contain-spaces." class="section level6">
+<h6>Note: make sure your username on Mac/Windows and your filestructure do not contain spaces.</h6>
+</div>
+<div id="spaces-in-your-path-will-cause-errors.-if-you-need-to-create-a-new-user-on-your-pcmac-before-you-start-programming" class="section level6">
+<h6>Spaces in your PATH will cause errors. If you need to, create a new user on your PC/Mac before you start programming</h6>
+<p><br/></p>
+<p>The first time you perform RNA-Seq you will need to download a slew of programs, packages, and files, enabling you to perform the analysis. This short walkthrough will help you prepare your digital workspace in a streamlined manner. For example, you can find all bioconductor <code>install.packages()</code> commands here, rather than searching every single one. This walkthough will take you through:</p>
+<p><br/></p>
+<ol start="0" style="list-style-type: decimal">
+<li>Setting up Linux/Unix for Mac or Windows</li>
+<li>Downloading and Installing Anaconda with python.</li>
+<li>Setting up bioconda</li>
+<li>Downloading and installing RStudio</li>
+<li>Downloading, installing, and running FastQC</li>
+<li>Downloading, installing, and running TrimGalore</li>
+<li>Downloading, installing, and running kallisto</li>
+<li>Downloading, installing, and running tximport</li>
+<li>Downloading, installing, and running DESeq2</li>
+<li>Downloading all required anaconda libraries</li>
+<li>Downloading all required R packages</li>
+</ol>
+<p><br/></p>
+</div>
+<div id="setting-up-your-environment" class="section level4">
+<h4>Setting up your environment</h4>
+<p>Mac: You already are running on Linux/Unix so you just need to open up a terminal with <code>command+space</code> and type <code>Terminal</code> then press enter.</p>
+<p>Windows: You will need to download WSL (Windows Subsystem for Linux) and install Ubuntu, or your linux distribution of choice (we recommend Ubuntu for Windows). Follow the instructions below or <a href="https://www.youtube.com/watch?v=xzgwDbe7foQ">follow along to this youtube video</a>.</p>
+<ol style="list-style-type: decimal">
+<li>Click on the windows icon</li>
+<li>Type <code>features</code> and click on <code>Turn Windows features on or off</code></li>
+<li>Scroll down to find <code>Windows Subsystem for Linux</code> and check the box. click ok.</li>
+<li>Restart your computer.</li>
+<li>Click the windows icon, search <code>microsoft store</code> and click the microsoft store.</li>
+<li>Search Ubuntu and download/install Ubuntu.</li>
+<li>Click the windows icon, navigate to <code>U</code> and you should see Ubuntu</li>
+<li>Click on Ubuntu to open the ubuntu terminal, and it will say <code>installing...</code></li>
+<li>The installation could take up to 45 minutes or and hour.</li>
+<li>Enter a username and password. you are now in the Linux environment</li>
+<li>At any time you can open command line and input <code>bash</code> to run Linux on WSL.</li>
+</ol>
+<p><br/></p>
+</div>
+<div id="navigating-bash-on-linux" class="section level4">
+<h4>Navigating bash on Linux</h4>
+<p>Simple useful commands for bash:</p>
+<ol style="list-style-type: decimal">
+<li><code>pwd</code> will pass the working directory</li>
+<li><code>cd ./folder/folder/etc</code> will change the current working directory</li>
+<li><code>./</code> is a shortcut for current working directory</li>
+<li><code>ls</code> will list the files and folders in the current directory.</li>
+<li><code>nano &lt;filename.txt&gt;</code> will open the nano text editor to view the text file.</li>
+<li><code>head &lt;filename&gt;</code> will show the first 20 lines of the file contents.</li>
+<li><code>cd ..</code> will navigate up one directory</li>
+<li><code>cd ~</code> will navigate to your home directory.</li>
+</ol>
+<p><br/></p>
+</div>
+<div id="download-anaconda" class="section level4">
+<h4>Download Anaconda</h4>
+<p><a href="https://www.anaconda.com/products/individual">Download Anaconda here</a> and install it.</p>
+<p>This will install:<br />
+1) Anaconda<br />
+2) Python<br />
+3) And you can also choose to install Jupyter Notebooks/Spyder IDE, which is recommended.</p>
+<p>You can check your version of python in bash/Linux by typing <code>python</code>. This also enters the python environment on the command line. exit by typing <code>exit()</code>.</p>
+<p><br/></p>
+</div>
+<div id="set-up-bioconda" class="section level4">
+<h4>Set up Bioconda</h4>
+<p>Set up Bioconda by typing in bash:</p>
+<pre class="bash"><code>conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge</code></pre>
+<p>Then run updates to update all available packages</p>
+<pre class="bash"><code>conda update all</code></pre>
+<p>If you need the instructions, <a href="https://bioconda.github.io/user/install.html">the website instructions are here</a></p>
+<p><br/></p>
+</div>
+<div id="install-rstudio" class="section level4">
+<h4>Install RStudio</h4>
+<p><a href="https://rstudio.com/products/rstudio/download/">Download RStudio</a> and install it.</p>
+<div id="run-r-studio-as-administrator-when-downloading-packages." class="section level6">
+<h6>Run R Studio as administrator when downloading packages.</h6>
+<p>If you are having trouble downloading packages into the correct library, You can run RStudio as an administrator on windows by right clicking the RStudio icon and running as administrator.</p>
+<p><br/></p>
+</div>
+</div>
+<div id="install-java" class="section level4">
+<h4>Install Java</h4>
+<p>some programs like FastQC depend on Java. to check if you have java, on bash or command line type <code>java -version</code>. <a href="https://java.com/en/download/help/download_options.xml">Install java here</a>. once java is installed, check it is installed correctly by again typing <code>java -version</code>.</p>
+<p><br/></p>
+</div>
+<div id="install-fastqc" class="section level4">
+<h4>Install FastQC</h4>
+<p><a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">Download FastQC here</a> and install it by unzipping the downloaded file. On windows, you can unzip files by right clicking, and using Windows Explorer to open the file. Move the application folder to a new location, and it is now unzipped.</p>
+<p>Open the FastQC GUI by following the instructions from the website:</p>
+<p>Windows: Simply double click on the run_fastqc bat file. If you want to make a pretty shortcut then we’ve included an icon file in the top level directory so you don’t have to use the generic bat file icon.</p>
+<p>MacOSX: Double click on the FastQC application icon.</p>
+<p><br/></p>
+</div>
+<div id="create-a-new-conda-environment" class="section level4">
+<h4>Create a new conda environment</h4>
+<p>Notice that to the left of your cursor, the line begins with (base) or something like it. This is telling you what environment you are in. You want to make a new environment for each workflow you do on your computer, so that the packages you download are specific to that environment, and don’t contaminate the global environment in case versions of packages are not compatible with the version of python you have, for example. To create a new conda environment, run:</p>
+<pre class="bash"><code>conda create --name RNA</code></pre>
+<p><br/></p>
+</div>
+<div id="initialize-the-conda-environment" class="section level4">
+<h4>Initialize the conda environment</h4>
+<p>And every time you open bash to perform this RNA-Seq analysis workflow in a new session, you’ll want to initialize this environment to run the packages you download here.</p>
+<pre class="bash"><code>conda activate RNA</code></pre>
+<p><br/></p>
+</div>
+<div id="install-trimgalore" class="section level4">
+<h4>Install TrimGalore</h4>
+<p>TrimGalore depends on two packages which you’ll need to install first: cutadapt and fastqc. You can download Fastqc again, this time in your conda environment, for optionally running fastqc following TrimGalore</p>
+<pre class="bash"><code>conda install -c bioconda cutadapt
+sudo apt install fastqc</code></pre>
+<p>Check versions to make sure they installed correctly</p>
+<pre class="bash"><code>cutadapt --version 
+fastqc -v</code></pre>
+<p>Install TrimGalore:</p>
+<pre class="bash"><code>curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
+tar xvzf trim_galore.tar.gz</code></pre>
+<p>you can extract tarballs in bash using administrator permissions (if needed) by running:</p>
+<pre class="bash"><code>sudo tar -xvzf /mnt/c/PATH/TO/TAR-FILE/Desktop/FILE-NAME.tar.gz -C /mnt/c/PATH/TO/DESTINATION/FOLDER</code></pre>
+<p><br/></p>
+<div id="install-kallisto" class="section level5">
+<h5>Install Kallisto</h5>
+<p>Make sure you are in the correct conda environment by passing <code>conda env list</code>. the environment with the <code>*</code> next to it is the current environment. Change environments by typing <code>conda activate environmentname</code>.</p>
+<pre class="bash"><code>conda install kallisto
+kallisto</code></pre>
+<p><br/></p>
+</div>
+<div id="this-concludes-prep-in-the-bashlinuxpython-environments" class="section level5">
+<h5>This concludes prep in the bash/linux/python environments</h5>
+<p>You’ll be prompted to install a lot of additional libraries during this process, make sure you download all of them and, at the end, it is good practice to update all the packages using <code>conda update all</code>.</p>
+<p><br/></p>
+</div>
+<div id="rstudio-and-downloading-r-packages" class="section level5">
+<h5>RStudio and downloading R Packages</h5>
+<p>Open RStudio. Update R. For Mac, download the latest update, then open RStudio and it will automatically install. On Windows:</p>
+<pre class="r"><code>install.packages(&quot;installr&quot;)
+library(installr)
+updateR()</code></pre>
+<p>Next, install all of these packages:</p>
+<pre class="r"><code>if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+BiocManager::install(version = &quot;3.11&quot;)
+
+install.packages(&quot;devtools&quot;)
+install.packages(&quot;tidyverse&quot;)
+
+if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+
+BiocManager::install(&quot;tximport&quot;)
+
+if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+
+BiocManager::install(&quot;tximportData&quot;)
+
+if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+
+BiocManager::install(&quot;rhdf5&quot;)
+
+if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+
+BiocManager::install(&quot;GenomicFeatures&quot;)
+
+install.packages(&quot;pacman&quot;)
+
+## or install the source package from 
+## https://cran.r-project.org/web/packages/pacman/index.html
+## and install in R with 
+## install.packages(path_to_file, repos = NULL, type=&quot;source&quot;)
+
+if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+
+BiocManager::install(&quot;DESeq2&quot;)</code></pre>
+<p><br/></p>
+<p>This should download and install all of the packages you will need. If there is a package missing, please email <a href="mailto:aaron.mitchell.dick@duke.edu" class="email">aaron.mitchell.dick@duke.edu</a> and i will include it here.</p>
+<p>You should now be ready to run Part 1 and Part 2 of the RNA-Seq Walkthrough.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
