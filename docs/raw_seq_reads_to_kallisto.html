@@ -306,57 +306,67 @@ $(document).ready(function () {
 
 
 <p><br/> <br/></p>
-<div id="rna-seq-analysis-mapping-raw-sequencing-reads-to-gene-transcripts-using-kallisto-in-preparation-for-differential-expression-analysis" class="section level2">
-<h2>RNA-Seq Analysis: Mapping Raw Sequencing Reads to Gene Transcripts Using kallisto in Preparation for Differential Expression Analysis</h2>
-<p>This is the first part of a tutorial designed to walk you through a full RNA-Seq workflow. In this section, we will take raw sequencing reads, process them, and map them to gene transcripts. In the second section, we will take the abundance counts of gene transcripts for each sample and for each conditions, and combine them to perform differential expression analysis. To skip ahead to that section, <a href="https://aaronmitchd.github.io/RNA_Seq/kallisto_h5_to_tximport_to_DESeq2_eval.html">use this link</a>. This tutorial is designed and commented so that users with little to no experience in programming can perform robust, simple, RNA-Seq analysis. For users that desire to perform an analysis without having to write any code, see <a href="https://galaxyproject.org/">Galaxy</a>, and <a href="https://usegalaxy.org/">UseGalaxy</a>, for an open-source, web-based platform.</p>
+<div id="rna-seq-analysis-mapping-raw-sequencing-reads-to-gene-transcripts-using-kallisto" class="section level2">
+<h2>RNA-Seq Analysis: Mapping Raw Sequencing Reads to Gene Transcripts Using kallisto</h2>
+<p>This is the first part of a tutorial designed to walk you through a full RNA-Seq workflow. In this section, we will take raw sequencing reads, process them, and map them to gene transcripts. In the second section, we will take the abundance counts of gene transcripts for each sample and for each conditions, and combine them to perform differential expression analysis. To skip ahead to that section, <a href="https://aaronmitchd.github.io/RNA_Seq/kallisto_h5_to_tximport_to_DESeq2_eval.html">use this link to skip to part 2</a>. This tutorial is designed and commented so that users with little to no experience in programming can perform robust, simple, RNA-Seq analysis. For users that desire to perform an analysis without having to write any code, see <a href="https://galaxyproject.org/">Galaxy</a>, and <a href="https://usegalaxy.org/">UseGalaxy</a>, for an open-source, web-based platform.</p>
 <p><br/></p>
-<div id="make-sure-you-can-run-bashlinux" class="section level3">
-<h3>Make sure you can run bash/linux</h3>
+<div id="make-sure-you-can-run-bashlinux" class="section level4">
+<h4>Make sure you can run bash/linux</h4>
 <p>For Mac Users: you already run bash in the terminal so you are good to go.</p>
 <p>For Windows Users: you need to download and install WSL (Windows Subsystem for Linux), then use the command <code>bash</code> on the command line to open the bash/Linux shell. The easiest way to do this is the 1) enable WSL and 2) download Ubuntu for windows by following the instructions <a href="https://ubuntu.com/wsl">here</a>. WARNING: This install can take up to an hour on a laptop. Time for a coffee break.</p>
+<p><br/></p>
 </div>
-<div id="make-sure-you-have-anacondabioconda-and-python-installed" class="section level3">
-<h3>Make sure you have anaconda/bioconda and python installed</h3>
+<div id="make-sure-you-have-anacondabioconda-and-python-installed" class="section level4">
+<h4>Make sure you have anaconda/bioconda and python installed</h4>
 <p>An effective way to download and run bioinformatics packages is through Anaconda using bioconductor. You’ll need to <a href="https://docs.anaconda.com/anaconda/install/">install Anaconda</a>. This will install Anaconda on Mac or Windows, and will also install python. You can then run Anaconda from your programs list in Mac/Windows.</p>
+<p><br/></p>
 </div>
-<div id="install-bioconda" class="section level3">
-<h3>Install bioconda</h3>
+<div id="install-bioconda" class="section level4">
+<h4>Install bioconda</h4>
 <pre class="bash"><code>conda config --add channels defaults
 conda config --add channels bioconda
 conda config --add channels conda-forge</code></pre>
+<p><br/></p>
 </div>
-<div id="install-all-the-programs-and-packages-youll-need-for-this-workflow" class="section level3">
-<h3>Install all the programs and packages you’ll need for this workflow</h3>
+<div id="install-all-the-programs-and-packages-youll-need-for-this-workflow" class="section level4">
+<h4>Install all the programs and packages you’ll need for this workflow</h4>
 <p>To see the list of programs and packages you’ll need, navigate to the <a href="https://aaronmitchd.github.io/RNA_Seq/Install-Resources.html">Install Resources</a> page in this tutorial. You’ll want to install all the packages, programs, and libraries you need right at the beginning, for a good flow when you’re programming. This may take a while, including installing RStudio and all the R packages for the second half of this tutorial.</p>
+<p><br/></p>
 </div>
-<div id="download-your-sequencing-files-and-run-fastqc" class="section level3">
-<h3>Download your sequencing files and run FastQC</h3>
+<div id="download-your-sequencing-files-and-run-fastqc" class="section level4">
+<h4>Download your sequencing files and run FastQC</h4>
 <p>Download your sequencing files (likely they are fastq.gz files) and ask your sequencing core or sequencing service what processing they performed on the reads. They likely de-multiplexed them, and may have trimmed them. If they did not do anything, you’ll need to run quality checks and trim sequencing adapters from all of your files. Sometimes they perform this step for you, and you’ll be able to tell from running FastQC what you need to do next. Download and run FastQC on each of your samples <a href="https://raw.githubusercontent.com/s-andrews/FastQC/master/INSTALL.txt">FastQC</a> and <a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC website</a>.</p>
+<p><br/></p>
 </div>
-<div id="evaluate-fastqc" class="section level3">
-<h3>Evaluate FastQC</h3>
+<div id="evaluate-fastqc" class="section level4">
+<h4>Evaluate FastQC</h4>
 <p>In the output file, you’ll find information on sequencing quality and presence or absence of adapter sequences. If any samples are of poor quality, you’ll need to make the determination whether to include them or throw them out. Then you can move forward with processing</p>
+<p><br/></p>
 </div>
-<div id="open-bash-terminal" class="section level3">
-<h3>Open bash terminal</h3>
+<div id="open-bash-terminal" class="section level4">
+<h4>Open bash terminal</h4>
 <p>On Mac open the Terminal, or on Windows open the command prompt and type <code>bash</code>.</p>
+<p><br/></p>
 </div>
-<div id="update-conda" class="section level3">
-<h3>Update conda</h3>
+<div id="update-conda" class="section level4">
+<h4>Update conda</h4>
 <pre class="bash"><code>conda update all</code></pre>
+<p><br/></p>
 </div>
-<div id="create-a-new-conda-environment" class="section level3">
-<h3>Create a new conda environment</h3>
+<div id="create-a-new-conda-environment" class="section level4">
+<h4>Create a new conda environment</h4>
 <p>Notice that to the left of your cursor, the line begins with (base) or something like it. This is telling you what environment you are in. You want to make a new environment for each workflow you do on your computer, so that the packages you download are specific to that environment, and don’t contaminate the global environment in case versions of packages are not compatible with the version of python you have, for example. To create a new conda environment, run:</p>
 <pre class="bash"><code>conda create --name RNA</code></pre>
+<p><br/></p>
 </div>
-<div id="initialize-the-conda-environment" class="section level3">
-<h3>Initialize the conda environment</h3>
+<div id="initialize-the-conda-environment" class="section level4">
+<h4>Initialize the conda environment</h4>
 <p>And every time you open bash to perform this RNA-Seq analysis workflow in a new session, you’ll want to initialize this environment to run the packages you download here.</p>
 <pre class="bash"><code>conda activate RNA</code></pre>
+<p><br/></p>
 </div>
-<div id="install-trimgalore" class="section level3">
-<h3>Install TrimGalore</h3>
+<div id="install-trimgalore" class="section level4">
+<h4>Install TrimGalore</h4>
 <p>TrimGalore depends on cutadapt and FastQC (optional), so you’ll need to install those. Once you are in your conda RNA environment (you can check by running <code>conda env list</code> and the <code>*</code> will tell you which one you are currently in), install cutadapt then FastQC:</p>
 <pre class="bash"><code>conda install -c bioconda cutadapt
 sudo apt install fastqc</code></pre>
@@ -369,9 +379,10 @@ tar xvzf trim_galore.tar.gz</code></pre>
 <p>To run TrimGalore with default options and run FastQC after: <code>[your trimgalore directory]_trim_galore --fastqc &lt;path and filename&gt;</code></p>
 <pre class="bash"><code>/mnt/c/Users/Amdprograms/TrimGalore-0.6.5/trim_galore --fastqc &lt;filename&gt;</code></pre>
 <p>If you are advanced, you can run a short for loop to run trim galore on all files in a folder. this could take several hours depending on filesize and number.</p>
+<p><br/></p>
 </div>
-<div id="concatenate-samples-run-on-multiple-lanes" class="section level3">
-<h3>Concatenate samples run on multiple lanes</h3>
+<div id="concatenate-samples-run-on-multiple-lanes" class="section level4">
+<h4>Concatenate samples run on multiple lanes</h4>
 <p>If you mitigated batch effects by splitting samples and running them on multiple lanes, you’ll need to concatenate those runs into a single file representing your full sample. Concatenate any samples that were run on multiple lanes using:</p>
 <pre class="bash"><code>Cat 5190-S17* &gt; S17_DMSO_6h.fastq.gz
 # NOTE: SAVE YOUR FILES AS fastq.gz</code></pre>
@@ -383,26 +394,30 @@ tar xvzf trim_galore.tar.gz</code></pre>
 <li>generate an index file called a kallisto index file</li>
 <li>pseudoalign each samples reads against the kallisto index file.</li>
 </ol>
+<p><br/></p>
 </div>
-<div id="install-kallisto" class="section level3">
-<h3>Install kallisto</h3>
+<div id="install-kallisto" class="section level4">
+<h4>Install kallisto</h4>
 <p>kallisto should already be installed, but if not, run</p>
 <pre class="bash"><code>conda install kallisto
 kallisto</code></pre>
 <p>which will install kallisto, then will check version and provide a list of possible commands.</p>
+<p><br/></p>
 </div>
-<div id="create-a-kallisto-index-file" class="section level3">
-<h3>Create a kallisto index file</h3>
+<div id="create-a-kallisto-index-file" class="section level4">
+<h4>Create a kallisto index file</h4>
 <p>For common organisms, you can skip generating an index file, as the authors have created a repository for you. <a href="https://github.com/pachterlab/kallisto-transcriptome-indices/releases">Download the tarball for your species here</a>. It is highly recommended you follow this step if your organism is on this list, because it will make part two of this walkthrough easier. Otherwise, build your index according to the manual.</p>
+<p><br/></p>
 </div>
-<div id="extract-the-tarball" class="section level3">
-<h3>Extract the tarball</h3>
+<div id="extract-the-tarball" class="section level4">
+<h4>Extract the tarball</h4>
 <p>run this code in bash and name the destination folder.</p>
 <pre class="bash"><code>sudo tar -xvzf /mnt/c/PATH/TO/TAR-FILE/Desktop/FILE-NAME.tar.gz -C /mnt/c/PATH/TO/DESTINATION/FOLDER</code></pre>
 <p>Now, in the extracted folder you have your .idx file which you can just point to when running kallisto. Or, you can copy the .idx file and paste it into the folder containing all your sequencing samples. Side note, in the extracted folder you also have a .gtf file which you will use in part 2 of the walkthrough.</p>
+<p><br/></p>
 </div>
-<div id="run-kallisto" class="section level3">
-<h3>Run kallisto</h3>
+<div id="run-kallisto" class="section level4">
+<h4>Run kallisto</h4>
 <p>Now, we will run kallisto on each sample. It is highly recommended you read the manual before you run your samples. Here, we will provide some simple instruction. Kallisto defaults to paired-end reads, so it will accept two files and compute the pairs. If you have single-end reads, you’ll provide an argument and it requires you to define your read length <code>-l</code> and standard deviation <code>-s</code> (you will know these values from your FASTQC run).</p>
 <p>Navigate to the directory containing all your samples.</p>
 <p>Here, we run kallisto on single-end reads with 100 bootstraps <code>-b</code>:</p>
