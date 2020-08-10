@@ -17,9 +17,9 @@ knitr::opts_chunk$set(error = FALSE)
 # RNA-seq analysis using kallisto, tximport, and DeSeq2
 
 This walkthrough was built by combining the information from several vignettes in order to streamline workflow from kallisto output files.  
-To see the beginning of the workflow from raw sequencing reads (fastq files) to finished kallisto output directory, see <>.  
-Here, we start with .h5 files already ordered into a directory, and we have already created a .txt files that describes the experimental paradigm, including samples and conditions.  
-If you are executing this for the very first time, see this file <> for information on how to download all the packages you will need, which you'll need to do first before you can implement the function library().
+To see the beginning of the workflow from raw sequencing reads (fastq files) to finished kallisto output directory, see [Raw Sequencing Reads -> filtering(FastQC, TrimGalore) -> kallisto](https://aaronmitchd.github.io/RNA_Seq/raw_seq_reads_to_kallisto.html).  
+Here, we start with `.h5` files already ordered into a directory, and we have already created a `.txt` files that describes the experimental paradigm, including samples and conditions.  
+If you are executing this for the very first time, see this file [Install Packages](https://aaronmitchd.github.io/RNA_Seq/Install-Packages.html) for information on how to download all the packages you will need, which you'll need to do first before you can implement the function `library()`.
 
 ### Load your libraries:
 
@@ -72,7 +72,7 @@ files <- file.path("./kallisto", samples$sample, "abundance.h5")
 files
 ```
 
-Add column headers to the files dataframe ordered "sample[+n]". All this does is provide columns for each sample's reads:
+Add column headers to the files dataframe ordered `sample[+n]`. All this does is provide columns for each sample's reads:
 
 ```{r smaples to rows}
 names(files) <- paste0("sample", 1:6)
@@ -81,7 +81,7 @@ files
 
 ### Making the TxDb database to relate transcript name to gene name 
 
-Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is important, and somewhat tricky. A few different vignettes suggested codes that did not work for me.  Luckily, the authors of kallisto maintain [a database of tarball downloads](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a .gtf file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism's gtf file and to input into TxDb, making it into a TxDb dataframe.
+Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is important, and somewhat tricky. A few different vignettes suggested codes that did not work for me.  Luckily, the authors of kallisto maintain [a database of tarball downloads](https://github.com/pachterlab/kallisto-transcriptome-indices/releases) that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a `.gtf` file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism's gtf file as input into TxDb, making it into a TxDb dataframe.
 Simply navigate to the directory and file where you extracted the tarball (via Unix/Linux, on Windows Linux using WSL/Ubuntu, or on Mac) and you're good to go.
 
 ```{r tarball gtf,message=FALSE}
@@ -153,7 +153,7 @@ dds$condition <- relevel(dds$condition, ref = "DMSO")
 
 ### Run DESeq2
 
-Run DeSeq2, which returns a results file "res" with log2 fold changes, p values and adjusted p values.
+Run DeSeq2, which returns a results file `res` with log2 fold changes, p values and adjusted p values.
 
 ```{r DeSeq2, message=FALSE}
 dds <- DESeq(dds)

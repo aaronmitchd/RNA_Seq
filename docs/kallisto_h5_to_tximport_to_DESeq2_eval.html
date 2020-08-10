@@ -282,6 +282,9 @@ $(document).ready(function () {
   <a href="kallisto_h5_to_tximport_to_DESeq2_eval.html">Kallisto to DESeq2</a>
 </li>
 <li>
+  <a href="Install-Packages.html">Install Packages</a>
+</li>
+<li>
   <a href="About-and-References.html">About and References</a>
 </li>
       </ul>
@@ -306,9 +309,9 @@ $(document).ready(function () {
 <div id="rna-seq-analysis-using-kallisto-tximport-and-deseq2" class="section level1">
 <h1>RNA-seq analysis using kallisto, tximport, and DeSeq2</h1>
 <p>This walkthrough was built by combining the information from several vignettes in order to streamline workflow from kallisto output files.<br />
-To see the beginning of the workflow from raw sequencing reads (fastq files) to finished kallisto output directory, see &lt;&gt;.<br />
-Here, we start with .h5 files already ordered into a directory, and we have already created a .txt files that describes the experimental paradigm, including samples and conditions.<br />
-If you are executing this for the very first time, see this file &lt;&gt; for information on how to download all the packages you will need, which you’ll need to do first before you can implement the function library().</p>
+To see the beginning of the workflow from raw sequencing reads (fastq files) to finished kallisto output directory, see <a href="https://aaronmitchd.github.io/RNA_Seq/raw_seq_reads_to_kallisto.html">Raw Sequencing Reads -&gt; filtering(FastQC, TrimGalore) -&gt; kallisto</a>.<br />
+Here, we start with <code>.h5</code> files already ordered into a directory, and we have already created a <code>.txt</code> files that describes the experimental paradigm, including samples and conditions.<br />
+If you are executing this for the very first time, see this file <a href="https://aaronmitchd.github.io/RNA_Seq/Install-Packages.html">Install Packages</a> for information on how to download all the packages you will need, which you’ll need to do first before you can implement the function <code>library()</code>.</p>
 <div id="load-your-libraries" class="section level3">
 <h3>Load your libraries:</h3>
 <pre class="r"><code>library(&quot;tximport&quot;)
@@ -357,7 +360,7 @@ files</code></pre>
 <pre><code>## [1] &quot;./kallisto/S1output/abundance.h5&quot; &quot;./kallisto/S2output/abundance.h5&quot;
 ## [3] &quot;./kallisto/S3output/abundance.h5&quot; &quot;./kallisto/S4output/abundance.h5&quot;
 ## [5] &quot;./kallisto/S5output/abundance.h5&quot; &quot;./kallisto/S6output/abundance.h5&quot;</code></pre>
-<p>Add column headers to the files dataframe ordered “sample[+n]”. All this does is provide columns for each sample’s reads:</p>
+<p>Add column headers to the files dataframe ordered <code>sample[+n]</code>. All this does is provide columns for each sample’s reads:</p>
 <pre class="r"><code>names(files) &lt;- paste0(&quot;sample&quot;, 1:6)
 files</code></pre>
 <pre><code>##                            sample1                            sample2 
@@ -369,7 +372,7 @@ files</code></pre>
 </div>
 <div id="making-the-txdb-database-to-relate-transcript-name-to-gene-name" class="section level3">
 <h3>Making the TxDb database to relate transcript name to gene name</h3>
-<p>Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is important, and somewhat tricky. A few different vignettes suggested codes that did not work for me. Luckily, the authors of kallisto maintain <a href="https://github.com/pachterlab/kallisto-transcriptome-indices/releases">a database of tarball downloads</a> that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a .gtf file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism’s gtf file and to input into TxDb, making it into a TxDb dataframe. Simply navigate to the directory and file where you extracted the tarball (via Unix/Linux, on Windows Linux using WSL/Ubuntu, or on Mac) and you’re good to go.</p>
+<p>Getting the right mapping for turning your kallisto list of transcripts into a list useable for tximport is important, and somewhat tricky. A few different vignettes suggested codes that did not work for me. Luckily, the authors of kallisto maintain <a href="https://github.com/pachterlab/kallisto-transcriptome-indices/releases">a database of tarball downloads</a> that not only contain high-quality pre-made kallisto indexes (.idx files) for common organisms, but also contain a <code>.gtf</code> file which is exactly what you can use here to make the TxDb object. So, in short, I used the kallisto tarball which includes the organism’s gtf file as input into TxDb, making it into a TxDb dataframe. Simply navigate to the directory and file where you extracted the tarball (via Unix/Linux, on Windows Linux using WSL/Ubuntu, or on Mac) and you’re good to go.</p>
 <pre class="r"><code>txdb &lt;- makeTxDbFromGFF(&quot;C:/Users/AMDprograms/Downloads/mus_musculus/mus_musculus/Mus_musculus.GRCm38.96.gtf&quot;)</code></pre>
 <p>You can check what this data is like by calling these:</p>
 <pre class="r"><code>columns(txdb)</code></pre>
@@ -457,7 +460,7 @@ dds</code></pre>
 </div>
 <div id="run-deseq2" class="section level3">
 <h3>Run DESeq2</h3>
-<p>Run DeSeq2, which returns a results file “res” with log2 fold changes, p values and adjusted p values.</p>
+<p>Run DeSeq2, which returns a results file <code>res</code> with log2 fold changes, p values and adjusted p values.</p>
 <pre class="r"><code>dds &lt;- DESeq(dds)
 res &lt;- results(dds)
 head(res)</code></pre>
