@@ -36,3 +36,7 @@ Easy to follow bioinformatics workflows on the command line, bash (Linux), R, Py
 
 </a>
 </div>
+
+
+***
+[^]: version 1.0
