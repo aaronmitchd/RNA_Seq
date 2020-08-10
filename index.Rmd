@@ -15,7 +15,7 @@ output: html_document
 <div class="row" style="padding-top: 30px;">
 <div class="col-sm-6">
 
-# **AMD Bioinformatics Homepage**
+# **AMD Bioinformatics**
 
 Easy to follow bioinformatics workflows on the command line, bash (Linux), R, Python, and github.
 
